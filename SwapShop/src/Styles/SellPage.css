@@ -1,0 +1,46 @@
+.sell-page {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.sell-page h2 {
+  text-align: center;
+  color: #43a047; /* Primary color (green) */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+label {
+  font-size: 1rem;
+  color: #333;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.post-button {
+  background-color: #43a047; /* Primary color (green) */
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.post-button:hover {
+  background-color: #2e7d32; /* Darker green for hover */
+}
