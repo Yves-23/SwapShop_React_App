@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"; // Import Link for navigation
 import "./Header.css";
 import Logo from "../../assets/logo.jpg";
 import { IoMdSearch } from "react-icons/io";
@@ -12,10 +13,10 @@ const Header = () => {
         <div className="container flex justify-between items-center">
           {/* Logo */}
           <div>
-            <a href="#" className="font-bold text-2xl sm:text-3xl flex gap-2 items-center">
+            <Link to="/" className="font-bold text-2xl sm:text-3xl flex gap-2 items-center">
               <img src={Logo} alt="Logo" className="w-10" />
               <span className="dark:text-white">SwapShop</span>
-            </a>
+            </Link>
           </div>
 
           {/* Search Bar */}
@@ -35,20 +36,34 @@ const Header = () => {
           {/* Buttons and Dark Mode */}
           <div className="flex items-center gap-4">
             {/* Sell Button */}
-            <button
-              className="bg-secondary/80 hover:bg-secondary dark:bg-white dark:hover:bg-secondary/90 dark:hover:text-white transition duration-200 ease-in-out transform 
-              hover:scale-105 hover:shadow-lg text-white dark:text-black py-1 px-5 rounded-full font-bold"
-            >
-              Sell
-            </button>
+            <Link to="/sell">
+              <button
+                className="bg-secondary/80 hover:bg-secondary dark:bg-white dark:hover:bg-secondary/90 dark:hover:text-white transition duration-200 ease-in-out transform 
+                hover:scale-105 hover:shadow-lg text-white dark:text-black py-1 px-5 rounded-full font-bold"
+              >
+                Sell
+              </button>
+            </Link>
 
             {/* Login Button */}
-            <button
-              className="bg-orange-500 text-white dark:bg-orange-600 hover:bg-orange-600 dark:hover:bg-orange-500 transition 
-              duration-200 ease-in-out transform hover:scale-105 py-1 px-5 rounded-full font-bold"
-            >
-              Login
-            </button>
+            <Link to="/login">
+              <button
+                className="bg-orange-500 text-white dark:bg-orange-600 hover:bg-orange-600 dark:hover:bg-orange-500 transition 
+                duration-200 ease-in-out transform hover:scale-105 py-1 px-5 rounded-full font-bold"
+              >
+                Login
+              </button>
+            </Link>
+
+            {/* Signup Button */}
+            {/* <Link to="/signup">
+              <button
+                className="bg-gray-500 text-white dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-500 transition 
+                duration-200 ease-in-out transform hover:scale-105 py-1 px-5 rounded-full font-bold"
+              >
+                Signup
+              </button>
+            </Link> */}
 
             {/* Dark Mode Toggle */}
             <div className="ml-6">
