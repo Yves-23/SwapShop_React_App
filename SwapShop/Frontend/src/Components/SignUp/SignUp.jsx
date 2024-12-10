@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../Firebase/FirebaseConfig"
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import api from "../api/api";
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
-  const [phonenumber, setPhonenumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -15,7 +14,7 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    if (!username || !phonenumber || !email || !password || !confirmPassword) {
+    if (!username || !phoneNumber || !email || !password || !confirmPassword) {
       setError("All fields are required.");
       return;
     }
@@ -26,11 +25,18 @@ const SignUp = () => {
     }
 
     try {
-      // Use createUserWithEmailAndPassword for email/password signup
-      await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/"); // Redirect to the homepage on success
+      // Make a POST request to your backend API
+      const response = await api.post("/register", {
+        username,
+        phoneNumber,
+        email,
+        password,
+      });
+
+      console.log("User registered:", response.data);
+      navigate("/login"); // Redirect to the homepage on success
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || "Registration failed.");
     }
   };
 
@@ -44,11 +50,11 @@ const SignUp = () => {
         <form onSubmit={handleSignUp}>
           {/* Username */}
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Your Names
             </label>
             <input
-              type="username"
+              type="text"
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -58,16 +64,16 @@ const SignUp = () => {
               required
             />
           </div>
-          {/* PhoneNumber */}
+          {/* Phone Number */}
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="phonenumber" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Your Phone Number
             </label>
             <input
-              type="phonenumber"
-              id="phonenumber"
-              value={phonenumber}
-              onChange={(e) => setPhonenumber(e.target.value)}
+              type="text"
+              id="phoneNumber"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
                 focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               placeholder="Enter your Phone Number"
@@ -90,7 +96,6 @@ const SignUp = () => {
               required
             />
           </div>
-
           {/* Password */}
           <div className="mb-4">
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -107,7 +112,6 @@ const SignUp = () => {
               required
             />
           </div>
-
           {/* Confirm Password */}
           <div className="mb-6">
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300">

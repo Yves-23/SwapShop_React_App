@@ -1,29 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../Firebase/FirebaseConfig"; // Adjust the path as needed
-import { signInWithEmailAndPassword } from "firebase/auth";
+import AuthContext from "../../Context/AuthContext";
+
 
 const Login = () => {
-  const [phonenumber, setPhonenumber] = useState("");
-  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext); // Use login from AuthContext
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!phonenumber || !email || !password) {
-      setError("All fields are required.");
+    if (!phoneNumber || !password) {
+      setError("Both phone number and password are required.");
       return;
     }
 
     try {
-      // Use signInWithEmailAndPassword for login
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("/"); // Redirect to homepage on successful login
+      // Authenticate user and update AuthContext state
+      await login({ phoneNumber, password });
+      navigate("/"); // Redirect to home page on success
     } catch (err) {
-      setError("Invalid email or password. Please try again.");
+      console.error("Login Error:", err.response?.data || err.message);
+      setError(
+        err.response?.data?.message || "Invalid phone number or password. Please try again."
+      );
     }
   };
 
@@ -59,37 +62,19 @@ const Login = () => {
             {/* Phone Number */}
             <div className="mb-4">
               <label
-                htmlFor="email"
+                htmlFor="phoneNumber"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 Phone Number
               </label>
               <input
-                type="phonenumber"
-                id="phonenumber"
-                value={phonenumber}
-                onChange={(e) => setPhonenumber(e.target.value)}
+                type="text"
+                id="phoneNumber"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
                   focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 placeholder="Enter your Phone Number"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
-                  focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                placeholder="Enter your email"
                 required
               />
             </div>
