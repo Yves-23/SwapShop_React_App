@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
         const { username, email, password, phoneNumber } = req.body;
 
         // Validate required fields
-        if (!username || !email || !password || !phoneNumber) {
+        if (!username || !phoneNumber || !email || !password) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
@@ -43,9 +43,10 @@ router.post('/register', async (req, res) => {
         // Create a new user
         const newUser = new User({
             username,
-            email,
-            password: hashedPassword,
             phoneNumber,
+            email,
+            hashedPassword,
+            // : hashedPassword,
         });
 
         // Save the user to the database
@@ -60,22 +61,23 @@ router.post('/register', async (req, res) => {
 
 // User login route
 router.post('/login', async (req, res) => {
-    const { phoneNumber, password } = req.body;
-
     try {
-        // Check if the user exists using phone number
-        const user = await User.findOne({ phoneNumber });
+        const { phoneNumber, password } = req.body;
+        if (!phoneNumber || !password) {
+            return res.status(400).json({ message: 'Both phone number and password are required.' });
+        }
+
+        const user = await User.findOne({ phoneNumber});
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Compare the entered password with the stored hashed password
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Generate a JWT token
         const token = jwt.sign(
             { id: user._id, phoneNumber: user.phoneNumber },
             process.env.JWT_SECRET,
@@ -92,10 +94,11 @@ router.post('/login', async (req, res) => {
             },
         });
     } catch (error) {
-        console.error(error);
+        console.error('Login Error:', error);
         res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 // Protected route for viewing the user profile
 router.get('/profile', protect, (req, res) => {
