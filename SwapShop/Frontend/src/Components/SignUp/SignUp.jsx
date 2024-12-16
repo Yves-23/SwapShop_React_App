@@ -26,7 +26,7 @@ const SignUp = () => {
 
     try {
       // Make a POST request to your backend API
-      const response = await api.post("/register", {
+      const response = await api.post("/users/register", {
         username,
         phoneNumber,
         email,
@@ -41,8 +41,8 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center mb-6 dark:text-white">Create an Account</h2>
 
         {error && <div className="text-red-500 text-sm mb-4">{error}</div>}

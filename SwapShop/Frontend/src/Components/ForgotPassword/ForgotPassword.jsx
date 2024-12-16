@@ -1,40 +1,46 @@
 import React, { useState } from "react";
-import { auth } from "../Firebase/FirebaseConfig"; 
-import { sendPasswordResetEmail } from "firebase/auth";
+import api from "../api/api";
 
-const ResetPassword = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState(""); // Unified state for messages
+  const [isError, setIsError] = useState(false); // To control the message style
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
 
     if (!email) {
-      setError("Please enter your email address.");
+      setMessage("Please enter your email address.");
+      setIsError(true);
       return;
     }
 
     try {
-      await sendPasswordResetEmail(auth, email);
-      setSuccess("Password reset email sent! Check your inbox.");
-      setError(""); // Clear any previous error
+      const response = await api.post("/users/forgot-password", { email });
+
+      // Check the response
+      setMessage(response.data.message);
+      setIsError(false); // Reset to success style
     } catch (err) {
-      setError("Failed to send reset email. Please check the email address.");
-      setSuccess(""); // Clear any previous success message
+      setMessage(err.response?.data?.message || "Failed to send reset email. Please check the email address.");
+      setIsError(true); // Error style
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+      <div className="w-full max-w-md bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md -mt-40">
         <h2 className="text-2xl font-bold text-center mb-6 dark:text-white">Reset Your Password</h2>
 
-        {success && <div className="text-green-500 text-sm mb-4">{success}</div>}
-        {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
+        {/* Display Success or Error Message */}
+        {message && (
+          <div className={`text-sm mb-4 ${isError ? "text-red-500 font-bold text-lg" : "text-green-500 font-bold text-lg"}`}>
+            {message}
+          </div>
+        )}
 
-        <form onSubmit={handleResetPassword}>
-          {/* Email */}
+        <form onSubmit={handleResetPassword} className="">
+          {/* Email Input */}
           <div className="mb-6">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Email Address
@@ -75,4 +81,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ForgotPassword;

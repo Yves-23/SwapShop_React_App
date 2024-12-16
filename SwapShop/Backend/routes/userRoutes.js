@@ -37,15 +37,15 @@ router.post('/register', async (req, res) => {
         }
 
         // Hash the password
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        // const saltRounds = 10;
+        // const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Create a new user
         const newUser = new User({
             username,
             phoneNumber,
             email,
-            hashedPassword,
+            password,
             // : hashedPassword,
         });
 
@@ -110,7 +110,7 @@ router.get('/profile', protect, (req, res) => {
     });
 });
 
-router.post('/test-email', async (req, res) => {
+router.post('/forgot-password', async (req, res) => {
     const { to, subject, text } = req.body;
     try {
         await sendEmail(to, subject, text);
