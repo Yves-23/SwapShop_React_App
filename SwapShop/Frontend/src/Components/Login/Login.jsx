@@ -31,8 +31,8 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="flex flex-wrap w-full max-w-4xl bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
+      <div className="flex flex-wrap w-full max-w-3xl bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden mb-20">
         {/* Left Side: Info Section */}
         <div className="w-full md:w-1/2 bg-gradient-to-br from-blue-900 to-blue-950 text-white p-8 flex flex-col justify-center">
           <h2 className="text-3xl font-bold mb-4">Why Do You Need an Account?</h2>
@@ -114,7 +114,7 @@ const Login = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Forgot your password?{" "}
               <a
-                href="/reset-password"
+                href="/forgot-password"
                 className="text-blue-600 font-bold hover:underline"
               >
                 Reset it here
