@@ -8,6 +8,7 @@ import Sell from "./Components/Sell/Sell";
 import Footer from "./Components/Footer/Footer";
 import ResetPasswordForm from "./Components/ResetPasswordForm/ResetPasswordForm";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
+import HomePage from "./Components/HomePage/HomePage";
 
 const App = () => {
   return (
@@ -22,6 +23,11 @@ const App = () => {
         <Route path="/reset-password/:resetToken" element={<ResetPasswordForm />} />
         
       </Routes>
+      <Routes>
+        <Route path="/items" element={<HomePage />} />
+      </Routes>
+      <HomePage/>
+
       <Footer />
     </Router>
   );

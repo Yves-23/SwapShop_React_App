@@ -105,6 +105,12 @@ const Header = () => {
           <a href="#contact" className="text-sm font-medium hover:text-primary">
             Contact Us
           </a>
+          <Link
+            to="/items"
+            className="text-sm font-medium hover:text-primary transition"
+          >
+            Items
+          </Link>
         </div>
       </div>
     </div>

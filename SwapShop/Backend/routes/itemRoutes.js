@@ -27,11 +27,14 @@ const upload = multer({
   },
 });
 
+
+
 // POST route to upload an item (requires authentication)
 router.post('/', protect, upload.single('image'), async (req, res) => {
   try {
     const { title, description, category, price } = req.body;
-    const imagePath = req.file ? req.file.path : null; // Get file path
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
 
     // Validate required fields
     if (!title || !description || !category || !price || !imagePath) {
@@ -58,14 +61,12 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
 });
 
 // GET route to retrieve all items
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    // Fetch all items and populate the 'postedBy' field with user details
-    const items = await Item.find().populate('postedBy', 'username email');
+    const items = await Item.find();
     res.status(200).json(items);
-  } catch (error) {
-    console.error('Error fetching items:', error.message);
-    res.status(500).json({ message: 'An error occurred while fetching items' });
+  } catch (err) {
+    res.status(500).json({ message: "Server Error", error: err.message });
   }
 });
 
