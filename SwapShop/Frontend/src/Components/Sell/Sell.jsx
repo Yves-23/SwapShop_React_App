@@ -89,7 +89,7 @@ const Sell = () => {
         setError(""); // Clear the error state
     } catch (error) {
       console.error("Error posting item: ", error);
-      setError("Failed to post your item. Please try again.");
+      setError("Failed to post your item. Please Login and try again.");
     }
 };
 
