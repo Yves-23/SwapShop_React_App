@@ -3,14 +3,16 @@ const mongoose = require('mongoose');
 
 const itemSchema = new mongoose.Schema(
   {
-    title: { type: String},
+    title: { type: String, required: true },
     description: { type: String, required: true },
-    category: { type: String, default: 'Uncategorized' }, // Default category if not provided
     price: { type: String, required: true },
-    image: { type: String, default: null }, 
+    images: { type: [String], default: [] }, // Change 'image' to 'images' and make it an array
+    location: { type: String, required: true },
+    phoneNumber: { type: String, required: true },
+    whatsappNumber: { type: String, required: true },
     postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   },
-  { timestamps: true } // Adds createdAt and updatedAt timestamps
+  { timestamps: true }
 );
 
 const Item = mongoose.model('Item', itemSchema);
