@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./Components/Header/Header";
 import ImageSlider from "./Components/ImageSlider/ImageSlider";
 import Signup from "./Components/SignUp/SignUp";
@@ -13,23 +13,32 @@ import HomePage from "./Components/HomePage/HomePage";
 const App = () => {
   return (
     <Router>
-      <Header />
+      <Main />
+    </Router>
+  );
+};
+
+const Main = () => {
+  const location = useLocation();
+
+  // Routes where the header, footer, and homepage are not shown
+  const fullScreenRoutes = ["/signup", "/login", "/sell", "/forgot-password", "/reset-password/:resetToken"];
+  const isFullScreenPage = fullScreenRoutes.some((route) => location.pathname.startsWith(route));
+
+  return (
+    <>
+      {!isFullScreenPage && <Header />}
       <Routes>
-        <Route path="/" element={<ImageSlider />} />
+        <Route path="/" element={<><ImageSlider /><HomePage /></>} />
+        <Route path="/items" element={<HomePage />} />       
         <Route path="/signup" element={<Signup />} />
-        <Route path="/sell" element={<Sell />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/sell" element={<Sell />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:resetToken" element={<ResetPasswordForm />} />
-        
       </Routes>
-      <Routes>
-        <Route path="/items" element={<HomePage />} />
-      </Routes>
-      <HomePage/>
-
-      <Footer />
-    </Router>
+      {!isFullScreenPage && <Footer />}
+    </>
   );
 };
 

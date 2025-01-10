@@ -27,28 +27,27 @@ const upload = multer({
   },
 });
 
-
-
-// POST route to upload an item (requires authentication)
-router.post('/', protect, upload.single('image'), async (req, res) => {
+// POST route to upload an item with multiple images
+router.post('/', protect, upload.array('images', 5), async (req, res) => {
   try {
-    const { title, description, category, price } = req.body;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+    const { title, description, price, location, whatsappNumber, phoneNumber } = req.body;
 
+    // Map over the uploaded files to get their paths
+    const imagePaths = req.files.map(file => `/uploads/${file.filename}`);
 
-    // Validate required fields
-    if (!title || !description || !category || !price || !imagePath) {
-      return res.status(400).json({ message: 'All fields are required' });
+    if (!title || !description || !price || !location || !whatsappNumber || !phoneNumber || imagePaths.length < 2) {
+      return res.status(400).json({ message: 'All fields are required, including at least 2 images' });
     }
 
-    // Create new item with the logged-in user as the owner
     const newItem = new Item({
       title,
       description,
-      category,
       price,
-      image: imagePath,
-      postedBy: req.user._id, // Associate item with logged-in user
+      location,
+      whatsappNumber,
+      phoneNumber,
+      images: imagePaths, // Save array of image paths
+      postedBy: req.user._id,
     });
 
     // Save the item to the database
