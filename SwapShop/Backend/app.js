@@ -5,6 +5,8 @@ const cors = require('cors');
 const path = require('path'); // Import the path module
 const userRoutes = require('./routes/userRoutes');
 const itemRoutes = require('./routes/itemRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const Item = require('./models/Item'); // Import your Item model
 
 dotenv.config();
 
@@ -26,6 +28,22 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/api/items', itemRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
+
+app.get('/items', async (req, res) => {
+  try {
+    const { postedBy } = req.query; // Extract postedBy from query
+    const items = postedBy
+      ? await Item.find({ postedBy }) // If postedBy exists, filter by it
+      : await Item.find();           // Otherwise, return all items
+    res.status(200).json(items);     // Send filtered or all items
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).json({ message: 'Error fetching items' });
+  }
+});
+
+
 
 // Centralized error handling
 app.use((err, req, res, next) => {
