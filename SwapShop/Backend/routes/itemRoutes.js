@@ -62,11 +62,15 @@ router.post('/', protect, upload.array('images', 5), async (req, res) => {
 // GET route to retrieve all items
 router.get("/", async (req, res) => {
   try {
-    const items = await Item.find();
+    const { postedBy } = req.query;
+    const items = postedBy
+      ? await Item.find({ postedBy })
+      : await Item.find();
     res.status(200).json(items);
   } catch (err) {
     res.status(500).json({ message: "Server Error", error: err.message });
   }
 });
+
 
 module.exports = router;

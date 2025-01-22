@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { IoMdSearch } from "react-icons/io";
 import DarkMode from "../DarkMode/DarkMode";
@@ -11,6 +11,7 @@ const Header = () => {
   const { user, logout, fetchUser } = useContext(AuthContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate(); // Hook for navigation
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -18,6 +19,11 @@ const Header = () => {
 
   const closeDropdown = () => {
     setDropdownOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout(); // Clear user and token
+    navigate("/"); // Redirect user to the login page
   };
 
   useEffect(() => {
@@ -71,7 +77,7 @@ const Header = () => {
                       </li>
                       <li
                         className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                        onClick={logout}
+                        onClick={handleLogout}
                       >
                         Logout
                       </li>
