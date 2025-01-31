@@ -31,6 +31,7 @@ const AuthProvider = ({ children }) => {
       const response = await api.post("/users/login", credentials);
       const { token } = response.data;
       localStorage.setItem("token", token); // Save token locally
+      // localStorage.removeItem("adminToken");
       await fetchUser(); // Fetch and set user state
     } catch (error) {
       console.error("Login error:", error);

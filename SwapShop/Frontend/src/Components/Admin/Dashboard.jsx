@@ -13,13 +13,16 @@ import {
 } from "chart.js";
 import ProductsTable from "./ProductsTable";
 import UsersTable from "./UsersTable";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function Dashboard() {
   const [menu, setMenu] = useState("Overview");
-  const [stats, setStats] = useState({});
+  const [stats, setStats] = useState({ totalProducts: 0, totalUsers: 0 });
   const [chartData, setChartData] = useState({ productsByMonth: [], usersByMonth: [] });
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -28,48 +31,69 @@ export default function Dashboard() {
         setStats(res.data);
       } catch (err) {
         console.error("Error fetching stats:", err);
+        setError("Failed to fetch stats. Please try again later.");
       }
     };
 
     const fetchChartData = async () => {
       try {
         const res = await api.get("/admin/chart-data");
+        const { productsByMonth, usersByMonth } = res.data;
+
+        // Ensure data is in the correct format
+        const formattedProducts = Array(12).fill(0); // Initialize an array for 12 months
+        const formattedUsers = Array(12).fill(0);
+
+        productsByMonth.forEach((item) => {
+          formattedProducts[item._id - 1] = item.count; // Map data to the correct month index
+        });
+
+        usersByMonth.forEach((item) => {
+          formattedUsers[item._id - 1] = item.count; // Map data to the correct month index
+        });
+
         setChartData({
-          productsByMonth: res.data.productsByMonth.map((data) => ({
-            month: new Date(0, data._id - 1).toLocaleString("default", { month: "long" }),
-            count: data.count,
-          })),
-          usersByMonth: res.data.usersByMonth.map((data) => ({
-            month: new Date(0, data._id - 1).toLocaleString("default", { month: "long" }),
-            count: data.count,
-          })),
+          productsByMonth: formattedProducts,
+          usersByMonth: formattedUsers,
         });
       } catch (err) {
         console.error("Error fetching chart data:", err);
+        setError("Failed to fetch chart data. Please try again later.");
       }
     };
 
-    fetchStats();
-    fetchChartData();
-  }, []);
+    const token = localStorage.getItem("adminToken");
+    if (!token) {
+      navigate("/admin-login");
+    } else {
+      fetchStats();
+      fetchChartData();
+    }
+  }, [navigate]);
 
   const productsChartData = {
-    labels: chartData.productsByMonth.map((data) => data.month),
+    labels: [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December",
+    ],
     datasets: [
       {
         label: "Items Posted",
-        data: chartData.productsByMonth.map((data) => data.count),
+        data: chartData.productsByMonth,
         backgroundColor: "rgba(75, 192, 192, 0.5)",
       },
     ],
   };
 
   const usersChartData = {
-    labels: chartData.usersByMonth.map((data) => data.month),
+    labels: [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December",
+    ],
     datasets: [
       {
         label: "Users Registered",
-        data: chartData.usersByMonth.map((data) => data.count),
+        data: chartData.usersByMonth,
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
     ],
@@ -96,6 +120,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-100 flex">
       <Sidebar onMenuSelect={setMenu} />
       <main className="flex-1 p-6">
+        {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
         {menu === "Overview" && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

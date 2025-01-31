@@ -7,6 +7,21 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  
+});
+
+// Add a request interceptor to include the token in headers
+api.interceptors.request.use((config) => {
+  const isAdminRoute = config.url.startsWith("/admin"); // Check if the route is for admin
+  const token = isAdminRoute
+    ? localStorage.getItem("adminToken") // Use adminToken for admin routes
+    : localStorage.getItem("token"); // Use userToken for other routes
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
 });
 
 export default api;

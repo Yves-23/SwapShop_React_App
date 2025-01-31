@@ -5,8 +5,10 @@ const cors = require('cors');
 const path = require('path'); // Import the path module
 const userRoutes = require('./routes/userRoutes');
 const itemRoutes = require('./routes/itemRoutes');
-const adminRoutes = require('./routes/adminRoutes');
 const Item = require('./models/Item'); // Import your Item model
+const adminRoutes = require('./routes/adminRoutes');
+
+
 
 dotenv.config();
 
