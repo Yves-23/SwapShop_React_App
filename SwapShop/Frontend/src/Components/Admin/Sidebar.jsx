@@ -1,6 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar({ onMenuSelect }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("adminToken"); // Clear authentication token
+    navigate("/admin-login"); // Redirect to admin login
+  };
+
   const menuItems = ["Overview", "Products", "Users", "Settings"];
 
   return (
@@ -18,6 +26,13 @@ export default function Sidebar({ onMenuSelect }) {
             {item}
           </li>
         ))}
+        {/* Logout Button */}
+        <li
+          className="py-2 px-4 cursor-pointer hover:bg-red-600 transition text-red-400"
+          onClick={handleLogout}
+        >
+          Logout
+        </li>
       </ul>
     </aside>
   );

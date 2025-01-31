@@ -11,14 +11,16 @@ import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
 import HomePage from "./Components/HomePage/HomePage";
 import ProfilePage from "./Components/ProfilePage/ProfilePage";
 import Dashboard from "./Components/Admin/Dashboard"; // Import the dashboard component
-import AuthProvider from "./Context/AuthProvider"; // Ensure you import the provider and hook
+import AdminAuthProvider from "./Context/AdminAuthProvider"; // Import AdminAuthProvider
+import AdminLogin from "./Components/AdminLogin/AdminLogin";
+import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute"; // Import ProtectedRoute
 
 const App = () => {
   return (
     <Router>
-      <AuthProvider>
+      <AdminAuthProvider>
         <Main />
-      </AuthProvider>
+      </AdminAuthProvider>
     </Router>
   );
 };
@@ -34,6 +36,7 @@ const Main = () => {
     "/forgot-password",
     "/reset-password/:resetToken",
     "/dashboard", // Dashboard is full screen
+    "/admin-login",
   ];
   const isFullScreenPage = fullScreenRoutes.some((route) => location.pathname.startsWith(route));
 
@@ -46,11 +49,17 @@ const Main = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/sell" element={<Sell />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:resetToken" element={<ResetPasswordForm />} />
-        <Route 
-          path="/dashboard" element={<Dashboard />} 
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
         />
       </Routes>
       {!isFullScreenPage && <Footer />}
