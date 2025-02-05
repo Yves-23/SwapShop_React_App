@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User'); // Adjust the path to match your folder structure
 const jwt = require('jsonwebtoken');
 const protect = require('../middleware/authMiddleware');
+const authMiddlewareAdmin = require('../middleware/authMiddlewareAdmin');
 const { getUserProfile, updateUserProfile } = require('../controllers/userController');
 const sendEmail = require('../utils/sendEmail'); 
 const { requestPasswordReset, resetPassword } = require('../controllers/userController');
@@ -126,6 +127,27 @@ router.get("/", async (req, res) => {
       res.status(200).json(users);
     } catch (err) {
       res.status(500).json({ message: "Server Error", error: err.message });
+    }
+  });
+
+  // DELETE route to remove an item
+router.delete('/:id',authMiddlewareAdmin, async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id);
+      if (!User) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Check if the user is an admin or the owner of the item
+      if (req.user.isAdmin) {
+        await user.deleteOne();
+        return res.status(200).json({ message: 'User deleted successfully' });
+      } else {
+        return res.status(403).json({ message: 'Not authorized to delete this user' });
+      }
+    } catch (error) {
+      console.error('Error deleting item:', error.message);
+      return res.status(500).json({ message: 'Something went wrong' });
     }
   });
 

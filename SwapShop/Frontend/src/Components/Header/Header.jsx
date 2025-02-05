@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { IoMdSearch } from "react-icons/io";
 import DarkMode from "../DarkMode/DarkMode";
-import Logo from "../../assets/logo.jpg";
+import Logo from "../../assets/logo.png";
 import "./Header.css";
 import AuthContext from "../../Context/AuthContext";
 
@@ -35,8 +35,8 @@ const Header = () => {
       <div className="bg-primary/40 dark:bg-gray-800 py-2">
         <div className="container flex justify-between items-center">
           <Link to="/" className="font-bold text-2xl flex gap-2 items-center">
-            <img src={Logo} alt="Logo" className="w-10" />
-            <span>SwapShop</span>
+            <img src={Logo} alt="Logo" className="w-20 h-14" />
+            {/* <span>SwapShop</span> */}
           </Link>
           <div className="relative group hidden sm:block">
             <input

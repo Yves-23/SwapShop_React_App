@@ -3,6 +3,7 @@ const express = require('express');
 const multer = require('multer');
 const Item = require('../models/Item');
 const protect = require('../middleware/authMiddleware'); // Import middleware
+const authMiddlewareAdmin = require('../middleware/authMiddlewareAdmin'); // For admin authentication
 
 const router = express.Router();
 
@@ -69,6 +70,27 @@ router.get("/", async (req, res) => {
     res.status(200).json(items);
   } catch (err) {
     res.status(500).json({ message: "Server Error", error: err.message });
+  }
+});
+
+// DELETE route to remove an item
+router.delete('/:id',authMiddlewareAdmin, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+
+    // Check if the user is an admin or the owner of the item
+    if (req.user.isAdmin || item.postedBy.toString() === req.user._id.toString()) {
+      await item.deleteOne();
+      return res.status(200).json({ message: 'Item deleted successfully' });
+    } else {
+      return res.status(403).json({ message: 'Not authorized to delete this item' });
+    }
+  } catch (error) {
+    console.error('Error deleting item:', error.message);
+    return res.status(500).json({ message: 'Something went wrong' });
   }
 });
 
