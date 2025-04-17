@@ -1,0 +1,38 @@
+.dashboard {
+    display: flex;
+    width: 100%;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 2px;
+  }
+  
+  .cards {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .card {
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    flex: 1;
+  }
+  
+  .charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .chart-container {
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  

@@ -12,7 +12,7 @@ const AuthProvider = ({ children }) => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        const response = await api.get("/profile", {
+        const response = await api.get("/users/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(response.data);
@@ -28,9 +28,10 @@ const AuthProvider = ({ children }) => {
   // Login and fetch user details
   const login = async (credentials) => {
     try {
-      const response = await api.post("/login", credentials);
+      const response = await api.post("/users/login", credentials);
       const { token } = response.data;
       localStorage.setItem("token", token); // Save token locally
+      // localStorage.removeItem("adminToken");
       await fetchUser(); // Fetch and set user state
     } catch (error) {
       console.error("Login error:", error);

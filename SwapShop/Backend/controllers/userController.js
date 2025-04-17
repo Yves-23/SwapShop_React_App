@@ -1,6 +1,12 @@
 const User = require('../models/User');
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
+const dotenv = require('dotenv');
+
+
+// Configure environment variables
+dotenv.config();
+
 
 // Get user profile
 const getUserProfile = async (req, res) => {
@@ -55,25 +61,28 @@ const requestPasswordReset = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    user.resetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    user.resetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
     user.resetTokenExpiry = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    const resetURL = `http://localhost:3000/reset-password/${resetToken}`;
-    const subject = 'Password Reset Request';
+    // Use FRONTEND_URL from the .env file
+    const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    const subject = "Password Reset Request";
     const text = `Hi ${user.username},\n\nWe received a request to reset your password.\nPlease click the link below to reset your password:\n\n${resetURL}\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nSwapShop Support`;
 
     await sendEmail(user.email, subject, text);
 
-    res.status(200).json({ message: 'Password reset email sent' });
+    res.status(200).json({ message: "Password reset email sent successfully. Please check your inbox." });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message || "An error occurred. Please try again." });
   }
 };
+
+
 
 
 const resetPassword = async (req, res) => {

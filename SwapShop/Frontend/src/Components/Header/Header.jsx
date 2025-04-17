@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { IoMdSearch } from "react-icons/io";
 import DarkMode from "../DarkMode/DarkMode";
-import Logo from "../../assets/logo.jpg";
+// import Logo from "../../assets/logo.png";
 import "./Header.css";
 import AuthContext from "../../Context/AuthContext";
 
@@ -11,6 +11,7 @@ const Header = () => {
   const { user, logout, fetchUser } = useContext(AuthContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate(); // Hook for navigation
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -18,6 +19,11 @@ const Header = () => {
 
   const closeDropdown = () => {
     setDropdownOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout(); // Clear user and token
+    navigate("/"); // Redirect user to the login page
   };
 
   useEffect(() => {
@@ -29,8 +35,8 @@ const Header = () => {
       <div className="bg-primary/40 dark:bg-gray-800 py-2">
         <div className="container flex justify-between items-center">
           <Link to="/" className="font-bold text-2xl flex gap-2 items-center">
-            <img src={Logo} alt="Logo" className="w-10" />
-            <span>SwapShop</span>
+            {/* <img src={Logo} alt="Logo" className="w-20 h-14" /> */}
+            {/* <span>SwapShop</span> */}
           </Link>
           <div className="relative group hidden sm:block">
             <input
@@ -71,7 +77,7 @@ const Header = () => {
                       </li>
                       <li
                         className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                        onClick={logout}
+                        onClick={handleLogout}
                       >
                         Logout
                       </li>
@@ -105,6 +111,12 @@ const Header = () => {
           <a href="#contact" className="text-sm font-medium hover:text-primary">
             Contact Us
           </a>
+          <Link
+            to="/items"
+            className="text-sm font-medium hover:text-primary transition"
+          >
+            Items
+          </Link>
         </div>
       </div>
     </div>

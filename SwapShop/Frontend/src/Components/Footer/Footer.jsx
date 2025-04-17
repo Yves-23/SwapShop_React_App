@@ -17,9 +17,9 @@ const Footer = () => {
   return (
     <div>
       {/* Get Notified Section */}
-      <section className="dark:bg-gray-800 bg-primary/40 text-gray-700 dark:text-gray-300 py-8">
+      <section className="dark:bg-gray-900 bg-primary/40 text-gray-700 dark:text-gray-300 py-8">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl font-bold mb-4">Get Notified About New Products</h2>
+          <h2 className="text-2xl font-bold mb-4">Get notified about new products</h2>
           <p className="text-gray-400 mb-6">
             Stay updated with the latest items and offers! Subscribe now.
           </p>
@@ -41,7 +41,7 @@ const Footer = () => {
       </section>
 
       {/* Footer Section */}
-      <footer className="bg-white dark:bg-gray-900 text-black dark:text-white py-8 relative">
+      <footer className="bg-white dark:bg-gray-700 text-black dark:text-white py-8 relative">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {/* About SwapShop */}

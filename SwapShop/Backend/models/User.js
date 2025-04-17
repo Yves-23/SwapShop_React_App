@@ -11,7 +11,9 @@ const userSchema = new mongoose.Schema({
     resetToken: String, // To store the hashed reset token
     resetTokenExpiry: Date, // To store token expiry
     
-});
+},
+{ timestamps: true } // Add this line
+);
 
 // Encrypt Password Before Saving
 userSchema.pre('save', async function (next) {
